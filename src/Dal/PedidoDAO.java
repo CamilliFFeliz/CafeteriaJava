@@ -7,7 +7,7 @@ import model.Pedido;
 public abstract class PedidoDao {
 
     private static final String CAMINHO = "./Dados";
-    private static final String ARQUIVO = CAMINHO + "/pedidos.ser";
+    private static final String ARQUIVO = CAMINHO + "src/pedidos.ser";
 
     public static void salvarPedidos(List<Pedido> pedidos) {
         try {
