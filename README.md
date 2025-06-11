@@ -7,6 +7,7 @@ O Café Gatinhos Fofos é uma aplicação console que permite cadastrar amigos h
 Feito com muita dedicação, o projeto utiliza conceitos de orientação a objetos, MVC simples e interação amigável via console.
 
 Funcionalidades
+
 --> Cadastro de Amigos Humanos: Facilita guardar e gerenciar os dados dos clientes que amam nosso café.
 
 --> Cardápio Delicioso: Adicione, visualize e remova gostosuras felinas do nosso menu.
