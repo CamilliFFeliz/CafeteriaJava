@@ -1,18 +1,22 @@
-## Getting Started
+Café Gatinhos Fofos 🐾☕️
+Seja muito bem-vindo(a) ao Café Gatinhos Fofos — um projeto encantador para seu sistema de pedidos de café, feito com muito carinho para o nosso Desenvolvimento de Software! Aqui, além de um cardápio delicioso, você vai encontrar um ambiente cheio de amor e ronronados.
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Sobre o Projeto
+O Café Gatinhos Fofos é uma aplicação console que permite cadastrar amigos humanos (clientes), oferecer gostosuras irresistíveis (produtos) e criar pedidos fofinhos para deixar todo mundo feliz.
 
-## Folder Structure
+Feito com muita dedicação, o projeto utiliza conceitos de orientação a objetos, MVC simples e interação amigável via console.
 
-The workspace contains two folders by default, where:
+Funcionalidades
+--> Cadastro de Amigos Humanos: Facilita guardar e gerenciar os dados dos clientes que amam nosso café.
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+--> Cardápio Delicioso: Adicione, visualize e remova gostosuras felinas do nosso menu.
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+--> Pedidos Ronronantes: Selecione seu humano, escolha as gostosuras favoritas e finalize o pedido com sucesso — tudo acompanhado de muito miado e fofura!
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
 
-## Dependency Management
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+Agradecimentos
+Obrigado por visitar o Café Gatinhos Fofos! Que seus dias sejam tão aconchegantes e felizes quanto um gatinho ronronando no seu colo.
+
+Se quiser, pode deixar um carinho na forma de estrelas ⭐️⭐️⭐️ e comentários fofinhos no repositório!
+https://github.com/CamilliFFeliz/CafeteriaJava

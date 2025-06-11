@@ -11,7 +11,6 @@ public class Produto implements EntidadePersistivel, Externalizable {
     private String nome;
     private double preco;
 
-    // CONSTRUTOR PÚBLICO VAZIO (OBRIGATÓRIO)
     public Produto() {}
     
     public Produto(int id, String nome, double preco) {
@@ -34,7 +33,6 @@ public class Produto implements EntidadePersistivel, Externalizable {
         preco = in.readDouble();
     }
     
-    // Getters, setters e outros métodos permanecem os mesmos...
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getNome() { return nome; }

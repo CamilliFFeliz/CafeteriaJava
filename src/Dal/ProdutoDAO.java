@@ -15,7 +15,7 @@ public class ProdutoDAO {
             oos.writeInt(produtos.size());
             for (Produto produto : produtos) {
                 oos.writeInt(produto.getId());
-                oos.writeObject(produto.getNome()); // Alterado de writeUTF para writeObject
+                oos.writeObject(produto.getNome());
                 oos.writeDouble(produto.getPreco());
             }
         } catch (IOException e) {
@@ -29,19 +29,16 @@ public class ProdutoDAO {
             int numeroDeProdutos = ois.readInt();
             for (int i = 0; i < numeroDeProdutos; i++) {
                 int id = ois.readInt();
-                String nome = (String) ois.readObject(); // Alterado de readUTF para readObject
+                String nome = (String) ois.readObject();
                 double preco = ois.readDouble();
                 produtos.add(new Produto(id, nome, preco));
             }
         } catch (FileNotFoundException e) {
-            // Ignora se o arquivo não existe.
-        } catch (IOException | ClassNotFoundException e) { // Adicionado ClassNotFoundException
+        } catch (IOException | ClassNotFoundException e) {
             System.err.println("Erro ao carregar produtos: " + e.getMessage());
         }
         return produtos;
     }
-    
-    // Métodos de salvar, atualizar, deletar e buscar (sem alterações, já estão corretos)
 
     public void salvar(Produto produto) {
         List<Produto> produtos = listarTodos();

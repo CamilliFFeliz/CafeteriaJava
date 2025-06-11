@@ -18,8 +18,7 @@ public class PedidoDAO {
             for (Pedido pedido : pedidos) {
                 oos.writeInt(pedido.getId());
                 oos.writeInt(pedido.getCliente().getId());
-                oos.writeObject(pedido.getStatus()); // Alterado de writeUTF para writeObject
-                
+                oos.writeObject(pedido.getStatus());
                 oos.writeInt(pedido.getProdutos().size());
                 for (Produto produto : pedido.getProdutos()) {
                     oos.writeInt(produto.getId());
@@ -40,10 +39,8 @@ public class PedidoDAO {
             for (int i = 0; i < numeroDePedidos; i++) {
                 int pedidoId = ois.readInt();
                 int clienteId = ois.readInt();
-                String status = (String) ois.readObject(); // Alterado de readUTF para readObject
-                
+                String status = (String) ois.readObject();
                 Cliente cliente = clienteDAO.buscarPorId(clienteId);
-                
                 int numeroDeProdutos = ois.readInt();
                 List<Produto> produtosDoPedido = new ArrayList<>();
                 for (int j = 0; j < numeroDeProdutos; j++) {
@@ -53,7 +50,6 @@ public class PedidoDAO {
                         produtosDoPedido.add(produto);
                     }
                 }
-                
                 if (cliente != null) {
                     Pedido pedido = new Pedido(pedidoId, cliente, produtosDoPedido);
                     pedido.setStatus(status);
@@ -61,14 +57,11 @@ public class PedidoDAO {
                 }
             }
         } catch (FileNotFoundException e) {
-            // Ignora se o arquivo não existe.
-        } catch (IOException | ClassNotFoundException e) { // Adicionado ClassNotFoundException
+        } catch (IOException | ClassNotFoundException e) {
             System.err.println("Erro ao carregar pedidos: " + e.getMessage());
         }
         return pedidos;
     }
-
-    // Métodos de salvar, atualizar, deletar e buscar (sem alterações, já estão corretos)
 
     public void salvar(Pedido pedido) {
         List<Pedido> pedidos = listarTodos();

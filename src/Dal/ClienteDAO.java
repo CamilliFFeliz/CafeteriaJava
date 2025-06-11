@@ -20,8 +20,7 @@ public class ClienteDAO {
                 oos.writeObject(cliente.getTelefone());
             }
         } catch (IOException e) {
-            // Se um erro acontecer ao salvar, vamos saber exatamente qual é.
-            System.err.println("### ERRO FATAL AO SALVAR O ARQUIVO DE CLIENTES ###");
+            System.err.println("Erro ao salvar clientes: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -30,9 +29,8 @@ public class ClienteDAO {
         List<Cliente> clientes = new ArrayList<>();
         File arquivo = new File(ARQUIVO);
 
-        // 1. Verificação inicial: se o arquivo não existe ou está vazio, não há o que ler.
         if (!arquivo.exists()) {
-            return clientes; // Retorna a lista vazia, o que é esperado.
+            return clientes;
         }
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arquivo))) {
@@ -42,23 +40,16 @@ public class ClienteDAO {
                 String nome = (String) ois.readObject();
                 String endereco = (String) ois.readObject();
                 String telefone = (String) ois.readObject();
-                
                 clientes.add(new Cliente(id, nome, endereco, telefone));
             }
         } catch (EOFException e) {
-            // Isso pode acontecer se o arquivo for criado mas estiver vazio. É um "fim de arquivo" inesperado.
-            System.err.println("Aviso: O arquivo '" + ARQUIVO + "' foi encontrado, mas está vazio ou incompleto.");
         } catch (IOException | ClassNotFoundException e) {
-            // 2. Se qualquer outro erro acontecer durante a leitura, ele não será mais silencioso.
-            System.err.println("### ERRO FATAL AO LER O ARQUIVO DE CLIENTES ###");
-            System.err.println("O arquivo '" + ARQUIVO + "' pode estar corrompido.");
-            e.printStackTrace(); // Esta linha é a mais importante para o diagnóstico!
+            System.err.println("Erro ao carregar o arquivo de clientes: " + e.getMessage());
+            e.printStackTrace();
         }
         return clientes;
     }
-    
-    // Os métodos abaixo não precisam de alteração
-    
+
     public void salvar(Cliente cliente) {
         List<Cliente> clientes = listarTodos();
         clientes.add(cliente);

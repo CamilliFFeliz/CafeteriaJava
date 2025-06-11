@@ -1,46 +1,21 @@
 package model;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.util.ArrayList;
 import java.util.List;
 
-public class Pedido implements EntidadePersistivel, Externalizable {
-    private static final long serialVersionUID = 1L;
+public class Pedido implements EntidadePersistivel {
     private int id;
     private Cliente cliente;
     private List<Produto> produtos;
     private String status;
-    
-    // CONSTRUTOR PÚBLICO VAZIO (OBRIGATÓRIO)
-    public Pedido() {}
 
     public Pedido(int id, Cliente cliente, List<Produto> produtos) {
         this.id = id;
         this.cliente = cliente;
-        this.produtos = produtos;
+        this.produtos = new ArrayList<>(produtos);
         this.status = "Aberto";
     }
 
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeInt(id);
-        out.writeObject(cliente);     // Salva o objeto Cliente
-        out.writeObject(produtos);    // Salva a lista de objetos Produto
-        out.writeUTF(status);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        id = in.readInt();
-        cliente = (Cliente) in.readObject(); // Lê o objeto Cliente
-        produtos = (List<Produto>) in.readObject(); // Lê a lista de objetos Produto
-        status = in.readUTF();
-    }
-
-    // Getters, setters e outros métodos permanecem os mesmos...
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public Cliente getCliente() { return cliente; }
@@ -50,10 +25,44 @@ public class Pedido implements EntidadePersistivel, Externalizable {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
+    public double getValorTotal() {
+        double total = 0.0;
+        if (this.produtos != null) {
+            for (Produto produto : this.produtos) {
+                total += produto.getPreco();
+            }
+        }
+        return total;
+    }
+
     @Override
-    public void salvar() { /* ... */ }
+    public void salvar() {
+        Log.salvarLog("Pedido salvo: ID " + this.id + " para o cliente " + this.cliente.getNome());
+    }
+
     @Override
-    public void deletar() { /* ... */ }
+    public void deletar() {
+        Log.salvarLog("Pedido deletado: ID " + this.id);
+    }
+
     @Override
-    public void listar() { /* ... */ }
+    public void listar() {
+        System.out.println("\n--- Pedido ID: " + this.id + " ---");
+        System.out.println("Status: " + this.status);
+        if (this.cliente != null) {
+            System.out.println("Cliente: " + this.cliente.getNome() + " (ID: " + this.cliente.getId() + ")");
+        } else {
+            System.out.println("Cliente: N/A");
+        }
+        System.out.println("Itens do Pedido:");
+        if (this.produtos != null && !this.produtos.isEmpty()) {
+            for (Produto produto : this.produtos) {
+                System.out.println("  - " + produto.getNome() + " | R$ " + String.format("%.2f", produto.getPreco()));
+            }
+        } else {
+            System.out.println("  (Nenhum item no pedido)");
+        }
+        System.out.println("Valor Total: R$ " + String.format("%.2f", getValorTotal()));
+        System.out.println("--------------------");
+    }
 }

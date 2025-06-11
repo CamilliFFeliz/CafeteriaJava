@@ -1,6 +1,5 @@
 package model;
 
-// Nenhuma implementação especial. Apenas herda de Pessoa e implementa a interface do projeto.
 public class Cliente extends Pessoa implements EntidadePersistivel {
     private int id;
     private String telefone;
@@ -10,19 +9,31 @@ public class Cliente extends Pessoa implements EntidadePersistivel {
         this.id = id;
         this.telefone = telefone;
     }
-    
-    // Getters, setters e métodos da interface...
+
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getTelefone() { return telefone; }
     public void setTelefone(String telefone) { this.telefone = telefone; }
 
     @Override
-    public void exibirInformacoes() { /* ... */ }
+    public void exibirInformacoes() {
+        System.out.println("Cliente [ID: " + id + ", Nome: " + getNome() + ", Endereço: " + getEndereco() + ", Telefone: " + telefone + "]");
+    }
+
     @Override
-    public void salvar() { /* ... */ }
+    public void salvar() {
+        Log.salvarLog("Cliente salvo: " + getNome());
+        System.out.println("Salvando cliente: " + getNome());
+    }
+
     @Override
-    public void deletar() { /* ... */ }
+    public void deletar() {
+        Log.salvarLog("Cliente deletado: " + getNome());
+        System.out.println("Deletando cliente: " + getNome());
+    }
+
     @Override
-    public void listar() { /* ... */ }
+    public void listar() {
+        exibirInformacoes();
+    }
 }

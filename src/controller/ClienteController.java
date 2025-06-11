@@ -5,12 +5,6 @@ import factory.ClienteFactory;
 import model.Cliente;
 import java.util.List;
 
-/**
- * Controller para gerenciar as operações de Cliente.
- * Atua como uma ponte entre a View e o DAO, orquestrando as ações.
- * Este controller é "stateless", ou seja, não armazena a lista de clientes,
- * buscando-a sempre no DAO para garantir dados atualizados.
- */
 public class ClienteController {
     
     private ClienteDAO clienteDAO = new ClienteDAO();
@@ -31,11 +25,15 @@ public class ClienteController {
         System.out.println("Cliente adicionado com sucesso!");
     }
 
+    public List<Cliente> listarTodos() {
+        return clienteDAO.listarTodos();
+    }
+
     public void listarClientes() {
         List<Cliente> clientes = clienteDAO.listarTodos();
 
         if (clientes == null || clientes.isEmpty()) {
-            System.out.println("Nenhum cliente cadastrado.");
+            System.out.println("Nenhum cliente registado.");
         } else {
             System.out.println("\n--- Lista de Clientes ---");
             for (Cliente cliente : clientes) {

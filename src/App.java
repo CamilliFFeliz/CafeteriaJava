@@ -1,59 +1,75 @@
 import view.ClienteView;
-import view.MenuView; // Importe a nova interface
-// Importe as outras views quando forem criadas
-// import view.ProdutoView;
-// import view.PedidoView;
+import view.MenuView;
+import view.PedidoView;
+import view.ProdutoView;
 import java.util.Scanner;
+import controller.ClienteController;
+import controller.ProdutoController;
 
 public class App {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        // Em vez de declarar como ClienteView, podemos usar a interface!
-        MenuView menuAtual;
-        int opcao;
 
+    public static void main(String[] args) {
+        inicializarDados();
+        try (Scanner scanner = new Scanner(System.in)) {
+            exibirMenuPrincipal(scanner);
+        }
+        System.out.println("\nAté a próxima! Os gatinhos sentirão sua falta! Miau!");
+    }
+
+    private static void inicializarDados() {
+        ClienteController clienteController = new ClienteController();
+        ProdutoController produtoController = new ProdutoController();
+        if (clienteController.listarTodos().isEmpty()) {
+            System.out.println("Sistema: Nenhum cliente encontrado. Criando cliente padrão 'Amigo do Café'...");
+            clienteController.adicionarCliente("Amigo do Café", "Balcão", "N/A");
+        }
+        if (produtoController.listarTodos().isEmpty()) {
+            System.out.println("Sistema: Nenhum produto encontrado. Criando o nosso cardápio...");
+            produtoController.adicionarProduto("Café Ex-presso Gato", 5.00);
+            produtoController.adicionarProduto("Capurrccino", 8.50);
+            produtoController.adicionarProduto("Chocolate Quente Felino", 7.00);
+            produtoController.adicionarProduto("Pão de Queijo Gatinho", 4.50);
+        }
+    }
+
+    private static void exibirMenuPrincipal(Scanner scanner) {
+        MenuView menuAtual;
+        int opcao = -1;
         do {
-            System.out.println("\n==== MENU PRINCIPAL DA CAFETERIA ====");
-            System.out.println("1. Gerenciar Clientes");
-            System.out.println("2. Gerenciar Produtos"); // Futura implementação
-            System.out.println("3. Gerenciar Pedidos");  // Futura implementação
-            System.out.println("0. Sair");
-            System.out.print("Escolha uma opção: ");
-            
+            System.out.println("\nBem-vindo ao Café Gatinhos Fofos");
+            System.out.println("O que você e os gatinhos desejam fazer?\n");
+            System.out.println("1. Você é novo aqui? Cadastre-se");
+            System.out.println("2. Confira nosso Cardápio Delicioso");
+            System.out.println("3. Realize seu Pedido Ronronante");
+            System.out.println("0. Sair e receber um até logo dos gatinhos");
+            System.out.print("Opção: ");
+
             try {
-                opcao = Integer.parseInt(scanner.nextLine());
+                String entrada = scanner.nextLine();
+                opcao = Integer.parseInt(entrada);
             } catch (NumberFormatException e) {
-                System.out.println("Entrada inválida. Tente novamente.");
+                System.out.println("Entrada inválida. Por favor, digite um número.");
                 opcao = -1;
                 continue;
             }
-
             switch (opcao) {
                 case 1:
-                    // A variável do tipo da INTERFACE recebe um objeto da CLASSE
-                    menuAtual = new ClienteView();
-                    menuAtual.exibirMenu(); // Chamada padronizada!
+                    menuAtual = new ClienteView(scanner);
+                    menuAtual.exibirMenu();
                     break;
                 case 2:
-                    // Quando ProdutoView for criada, o padrão será o mesmo:
-                    // menuAtual = new ProdutoView();
-                    // menuAtual.exibirMenu();
-                    System.out.println("Funcionalidade de Produtos ainda não implementada.");
+                    menuAtual = new ProdutoView(scanner);
+                    menuAtual.exibirMenu();
                     break;
                 case 3:
-                     // Quando PedidoView for criada, o padrão será o mesmo:
-                    // menuAtual = new PedidoView();
-                    // menuAtual.exibirMenu();
-                    System.out.println("Funcionalidade de Pedidos ainda não implementada.");
+                    menuAtual = new PedidoView(scanner);
+                    menuAtual.exibirMenu();
                     break;
                 case 0:
-                    System.out.println("Saindo do sistema... Até logo!");
                     break;
                 default:
-                    System.out.println("Opção inválida!");
+                    System.out.println("Opção inválida, miau!");
             }
         } while (opcao != 0);
-
-        scanner.close();
     }
 }

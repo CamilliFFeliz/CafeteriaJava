@@ -1,6 +1,5 @@
 package model;
 
-// Nenhuma implementação especial necessária. Apenas a classe abstrata.
 public abstract class Pessoa {
     protected String nome;
     protected String endereco;
@@ -10,9 +9,8 @@ public abstract class Pessoa {
         this.endereco = endereco;
     }
     
-    protected Pessoa() {} // Construtor para as classes filhas
+    protected Pessoa() {}
 
-    // Getters e Setters...
     public String getNome() { return nome; }
     public String getEndereco() { return endereco; }
     public void setNome(String nome) { this.nome = nome; }
