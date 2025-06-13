@@ -15,21 +15,23 @@ public class Cliente extends Pessoa implements EntidadePersistivel {
     public String getTelefone() { return telefone; }
     public void setTelefone(String telefone) { this.telefone = telefone; }
 
+    public String getInformacoes() {
+        return "Cliente [ID: " + id + ", Nome: " + getNome() + ", Endereço: " + getEndereco() + ", Telefone: " + telefone + "]";
+    }
+
     @Override
     public void exibirInformacoes() {
-        System.out.println("Cliente [ID: " + id + ", Nome: " + getNome() + ", Endereço: " + getEndereco() + ", Telefone: " + telefone + "]");
+        Log.salvarLog("Informações exibidas do cliente: " + getInformacoes());
     }
 
     @Override
     public void salvar() {
         Log.salvarLog("Cliente salvo: " + getNome());
-        System.out.println("Salvando cliente: " + getNome());
     }
 
     @Override
     public void deletar() {
         Log.salvarLog("Cliente deletado: " + getNome());
-        System.out.println("Deletando cliente: " + getNome());
     }
 
     @Override

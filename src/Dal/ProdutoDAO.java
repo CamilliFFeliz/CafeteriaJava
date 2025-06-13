@@ -1,10 +1,9 @@
 package Dal;
 
-import model.Produto;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import model.Produto;
 
 public class ProdutoDAO {
 
@@ -19,13 +18,17 @@ public class ProdutoDAO {
                 oos.writeDouble(produto.getPreco());
             }
         } catch (IOException e) {
-            System.err.println("Erro ao salvar produtos: " + e.getMessage());
+            throw new RuntimeException("Erro ao salvar produtos no arquivo.", e);
         }
     }
 
     public List<Produto> listarTodos() {
         List<Produto> produtos = new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ARQUIVO))) {
+        File arquivo = new File(ARQUIVO);
+        if (!arquivo.exists()) {
+            return produtos;
+        }
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(arquivo))) {
             int numeroDeProdutos = ois.readInt();
             for (int i = 0; i < numeroDeProdutos; i++) {
                 int id = ois.readInt();
@@ -33,9 +36,9 @@ public class ProdutoDAO {
                 double preco = ois.readDouble();
                 produtos.add(new Produto(id, nome, preco));
             }
-        } catch (FileNotFoundException e) {
+        } catch (EOFException e) {
         } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Erro ao carregar produtos: " + e.getMessage());
+            throw new RuntimeException("Erro ao carregar produtos do arquivo.", e);
         }
         return produtos;
     }
@@ -59,24 +62,14 @@ public class ProdutoDAO {
 
     public void deletar(int id) {
         List<Produto> produtos = listarTodos();
-        Iterator<Produto> iterador = produtos.iterator();
-        while (iterador.hasNext()) {
-            Produto produto = iterador.next();
-            if (produto.getId() == id) {
-                iterador.remove();
-                break;
-            }
-        }
+        produtos.removeIf(produto -> produto.getId() == id);
         salvarTodos(produtos);
     }
 
     public Produto buscarPorId(int id) {
-        List<Produto> produtos = listarTodos();
-        for (Produto produto : produtos) {
-            if (produto.getId() == id) {
-                return produto;
-            }
-        }
-        return null;
+        return listarTodos().stream()
+                .filter(produto -> produto.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 }

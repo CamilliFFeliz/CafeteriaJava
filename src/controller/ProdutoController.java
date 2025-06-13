@@ -2,27 +2,36 @@ package controller;
 
 import Dal.ProdutoDAO;
 import factory.ProdutoFactory;
-import model.Produto;
 import java.util.List;
+import model.Produto;
 
 public class ProdutoController {
     
-    private ProdutoDAO produtoDAO = new ProdutoDAO();
+    private final ProdutoDAO produtoDAO;
+    
+    public ProdutoController(ProdutoDAO produtoDAO) {
+        this.produtoDAO = produtoDAO;
+    }
 
     public void adicionarProduto(String nome, double preco) {
         List<Produto> produtosAtuais = produtoDAO.listarTodos();
-        int maxId = 0;
+        int proximoId = calcularProximoId(produtosAtuais);
         
-        for (Produto p : produtosAtuais) {
+        Produto novoProduto = ProdutoFactory.criarProduto(proximoId, nome, preco);
+        produtoDAO.salvar(novoProduto);
+    }
+
+    private int calcularProximoId(List<Produto> produtos) {
+        if (produtos == null || produtos.isEmpty()) {
+            return 1;
+        }
+        int maxId = 0;
+        for (Produto p : produtos) {
             if (p.getId() > maxId) {
                 maxId = p.getId();
             }
         }
-        int proximoId = maxId + 1;
-
-        Produto novoProduto = ProdutoFactory.criarProduto(proximoId, nome, preco);
-        produtoDAO.salvar(novoProduto);
-        System.out.println("Produto adicionado com sucesso!");
+        return maxId + 1;
     }
 
     public List<Produto> listarTodos() {
@@ -31,21 +40,23 @@ public class ProdutoController {
 
     public void listarProdutos() {
         List<Produto> produtos = produtoDAO.listarTodos();
-
-        if (produtos == null || produtos.isEmpty()) {
-            System.out.println("Nenhum produto registado.");
+        
+        if (produtos.isEmpty()) {
+            System.out.println("Nenhum produto registrado.");
         } else {
             System.out.println("\n--- Lista de Produtos ---");
-            for (Produto produto : produtos) {
-                produto.listar();
-            }
+            produtos.forEach(Produto::listar);
             System.out.println("-------------------------");
         }
     }
 
-    public void removerProduto(int id) {
-        produtoDAO.deletar(id);
-        System.out.println("Remoção processada. Verifique a lista para confirmar.");
+    public boolean removerProduto(int id) {
+        Produto produto = produtoDAO.buscarPorId(id);
+        if (produto != null) {
+            produtoDAO.deletar(id);
+            return true;
+        }
+        return false;
     }
 
     public Produto buscarProdutoPorId(int id) {

@@ -3,66 +3,74 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pedido implements EntidadePersistivel {
+public class Pedido {
     private int id;
     private Cliente cliente;
     private List<Produto> produtos;
     private String status;
 
     public Pedido(int id, Cliente cliente, List<Produto> produtos) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("O ID do pedido deve ser um número positivo.");
+        }
+        if (cliente == null) {
+            throw new IllegalArgumentException("O cliente não pode ser nulo.");
+        }
+        if (produtos == null || produtos.isEmpty()) {
+            throw new IllegalArgumentException("A lista de produtos não pode ser nula ou vazia.");
+        }
         this.id = id;
         this.cliente = cliente;
         this.produtos = new ArrayList<>(produtos);
         this.status = "Aberto";
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    public Cliente getCliente() { return cliente; }
-    public void setCliente(Cliente cliente) { this.cliente = cliente; }
-    public List<Produto> getProdutos() { return produtos; }
-    public void setProdutos(List<Produto> produtos) { this.produtos = produtos; }
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public List<Produto> getProdutos() {
+        return produtos;
+    }
+
+    public void setProdutos(List<Produto> produtos) {
+        this.produtos = produtos;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public double getValorTotal() {
-        double total = 0.0;
-        if (this.produtos != null) {
-            for (Produto produto : this.produtos) {
-                total += produto.getPreco();
-            }
-        }
-        return total;
+        return this.produtos.stream()
+                .mapToDouble(Produto::getPreco)
+                .sum();
     }
-
+    
     @Override
-    public void salvar() {
-        Log.salvarLog("Pedido salvo: ID " + this.id + " para o cliente " + this.cliente.getNome());
-    }
-
-    @Override
-    public void deletar() {
-        Log.salvarLog("Pedido deletado: ID " + this.id);
-    }
-
-    @Override
-    public void listar() {
-        System.out.println("\n--- Pedido ID: " + this.id + " ---");
-        System.out.println("Status: " + this.status);
-        if (this.cliente != null) {
-            System.out.println("Cliente: " + this.cliente.getNome() + " (ID: " + this.cliente.getId() + ")");
-        } else {
-            System.out.println("Cliente: N/A");
-        }
-        System.out.println("Itens do Pedido:");
-        if (this.produtos != null && !this.produtos.isEmpty()) {
-            for (Produto produto : this.produtos) {
-                System.out.println("  - " + produto.getNome() + " | R$ " + String.format("%.2f", produto.getPreco()));
-            }
-        } else {
-            System.out.println("  (Nenhum item no pedido)");
-        }
-        System.out.println("Valor Total: R$ " + String.format("%.2f", getValorTotal()));
-        System.out.println("--------------------");
+    public String toString() {
+        return "Pedido{" +
+                "id=" + id +
+                ", cliente=" + cliente.getNome() +
+                ", produtos=" + produtos.size() + " itens" +
+                ", status='" + status + '\'' +
+                ", valorTotal=" + String.format("%.2f", getValorTotal()) +
+                '}';
     }
 }

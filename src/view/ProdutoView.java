@@ -1,78 +1,89 @@
 package view;
 
 import controller.ProdutoController;
+import model.Produto;
+import java.util.List;
 import java.util.Scanner;
 
 public class ProdutoView implements MenuView {
-    
-    private ProdutoController controller = new ProdutoController();
-    private Scanner scanner;
 
-    public ProdutoView(Scanner scanner) {
+    private final Scanner scanner;
+    private final ProdutoController controller;
+
+    public ProdutoView(Scanner scanner, ProdutoController controller) {
         this.scanner = scanner;
+        this.controller = controller;
     }
 
     @Override
     public void exibirMenu() {
-        int opcao;
+        int opcao = -1;
         do {
-            System.out.println("\nNosso Cardápio Delicioso");
-            System.out.println("========================================");
-            System.out.println("1. Cadastrar uma nova Gostosura");
-            System.out.println("2. Ver todas as nossas Gostosuras");
-            System.out.println("3. Remover uma Gostosura do cardápio");
-            System.out.println("0. Voltar ao Salão Principal");
+            System.out.println("\n--- Cardápio Delicioso ---");
+            System.out.println("================================");
+            System.out.println("1. Adicionar nova gostosura");
+            System.out.println("2. Ver todas as gostosuras");
+            System.out.println("3. Remover uma gostosura");
+            System.out.println("0. Voltar para o Salão Principal");
             System.out.print("Opção: ");
 
             try {
                 opcao = Integer.parseInt(scanner.nextLine());
+
+                switch (opcao) {
+                    case 1:
+                        adicionarProduto();
+                        break;
+                    case 2:
+                        listarProdutos();
+                        break;
+                    case 3:
+                        removerProduto();
+                        break;
+                    case 0:
+                        break;
+                    default:
+                        System.out.println("[ERRO] Opção inválida, miau!");
+                }
             } catch (NumberFormatException e) {
-                System.out.println("Entrada inválida. Por favor, digite um número.");
-                opcao = -1;
-                continue;
-            }
-            switch (opcao) {
-                case 1:
-                    adicionarProduto();
-                    break;
-                case 2:
-                    controller.listarProdutos();
-                    break;
-                case 3:
-                    removerProduto();
-                    break;
-                case 0:
-                    break;
-                default:
-                    System.out.println("Opção inválida!");
+                System.out.println("[ERRO] Entrada inválida. Por favor, digite um número.");
+            } catch (Exception e) {
+                System.out.println("[ERRO INESPERADO] " + e.getMessage());
             }
         } while (opcao != 0);
     }
 
     private void adicionarProduto() {
+        System.out.println("\n--- Adicionar Nova Gostosura ---");
         System.out.print("Nome da gostosura: ");
         String nome = scanner.nextLine();
         
-        System.out.print("Preço (ex: 15.50): ");
-        try {
-            double preco = Double.parseDouble(scanner.nextLine());
-            if (preco < 0) {
-                System.out.println("O preço não pode ser negativo, miau!");
-            } else {
-                controller.adicionarProduto(nome, preco);
+        System.out.print("Preço (ex: 5.50): ");
+        double preco = Double.parseDouble(scanner.nextLine());
+
+        controller.adicionarProduto(nome, preco);
+        System.out.println("'" + nome + "' adicionado ao cardápio com sucesso!");
+    }
+
+    private void listarProdutos() {
+        System.out.println("\n--- Todas as Gostosuras do Cardápio ---");
+        
+        List<Produto> produtos = controller.listarTodos();
+
+        if (produtos.isEmpty()) {
+            System.out.println("Nenhuma gostosura cadastrada ainda.");
+        } else {
+            for (Produto produto : produtos) {
+                System.out.printf("ID: %d | Nome: %s | Preço: R$ %.2f\n",
+                        produto.getId(), produto.getNome(), produto.getPreco());
             }
-        } catch (NumberFormatException e) {
-            System.out.println("Preço inválido. A operação foi cancelada.");
         }
     }
 
     private void removerProduto() {
-        System.out.print("ID da gostosura para remover: ");
-        try {
-            int id = Integer.parseInt(scanner.nextLine());
-            controller.removerProduto(id);
-        } catch (NumberFormatException e) {
-            System.out.println("ID inválido! Deve ser um número.");
-        }
+        System.out.print("\nDigite o ID da gostosura para remover: ");
+        int id = Integer.parseInt(scanner.nextLine());
+        controller.removerProduto(id);
+        System.out.println("Remoção processada. Verifique a lista para confirmar.");
     }
 }

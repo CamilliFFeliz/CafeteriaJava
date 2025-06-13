@@ -15,7 +15,7 @@ public class Log {
             String logFormatado = dtf.format(LocalDateTime.now()) + " - INFO - " + mensagem;
             out.println(logFormatado);
         } catch (IOException e) {
-            System.err.println("Erro CRÍTICO ao salvar o log: " + e.getMessage());
+            salvarErroCritico("Erro ao salvar log de informação", e);
         }
     }
 
@@ -25,7 +25,16 @@ public class Log {
             out.println(logFormatado);
             erro.printStackTrace(out);
         } catch (IOException e) {
-            System.err.println("Erro CRÍTICO ao salvar o log: " + e.getMessage());
+            salvarErroCritico("Erro ao salvar log de erro", e);
+        }
+    }
+
+    private static void salvarErroCritico(String mensagem, Exception erro) {
+        try (PrintWriter out = new PrintWriter(new FileWriter(NOME_ARQUIVO, true))) {
+            String logFormatado = dtf.format(LocalDateTime.now()) + " - CRITICO - " + mensagem;
+            out.println(logFormatado);
+            erro.printStackTrace(out);
+        } catch (IOException ignored) {
         }
     }
 }
